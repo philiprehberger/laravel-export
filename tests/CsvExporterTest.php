@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PhilipRehberger\Export\Tests;
 
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Orchestra\Testbench\TestCase;
 use PhilipRehberger\Export\ExportServiceProvider;
 use PhilipRehberger\Export\Formats\CsvExporter;
@@ -27,7 +28,7 @@ class CsvExporterTest extends TestCase
         return new CsvExporter;
     }
 
-    private function makeData(): \Illuminate\Support\Collection
+    private function makeData(): Collection
     {
         return collect([
             ['name' => 'Alice', 'email' => 'alice@example.com', 'age' => 30],

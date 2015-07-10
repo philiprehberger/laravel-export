@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-03-13
+
+### Fixed
+- HTTP header injection vulnerability in `Content-Disposition` filenames — control characters, quotes, and path separators are now stripped
+- `json_encode()` failures in nested data transformations no longer silently produce `false`
+
+### Removed
+- Unused `default_format` config option (was defined but never read by any code path)
+
 ## [1.0.0] - 2025-03-05
 
 ### Added

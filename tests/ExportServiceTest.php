@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhilipRehberger\Export\Tests;
 
+use Illuminate\Support\Collection;
 use InvalidArgumentException;
 use Orchestra\Testbench\TestCase;
 use PhilipRehberger\Export\Contracts\ExportableInterface;
@@ -23,7 +24,7 @@ class ExportServiceTest extends TestCase
         return $this->app->make(ExportService::class);
     }
 
-    private function makeData(): \Illuminate\Support\Collection
+    private function makeData(): Collection
     {
         return collect([
             ['name' => 'Alice', 'email' => 'alice@example.com'],
@@ -165,5 +166,108 @@ class ExportServiceTest extends TestCase
         $this->expectExceptionMessage('Items must implement ExportableInterface.');
 
         $service->exportModels($items, 'csv');
+    }
+
+    public function test_download_sanitizes_filename_with_newlines(): void
+    {
+        $service = $this->makeService();
+        $response = $service->download(
+            $this->makeData(),
+            $this->makeColumns(),
+            'csv',
+            "test\nexport"
+        );
+
+        $disposition = $response->headers->get('Content-Disposition');
+        $this->assertStringNotContainsString("\n", $disposition);
+        $this->assertStringContainsString('testexport.csv', $disposition);
+    }
+
+    public function test_download_sanitizes_filename_with_quotes(): void
+    {
+        $service = $this->makeService();
+        $response = $service->download(
+            $this->makeData(),
+            $this->makeColumns(),
+            'csv',
+            'test"export'
+        );
+
+        $disposition = $response->headers->get('Content-Disposition');
+        $this->assertStringContainsString('testexport.csv', $disposition);
+    }
+
+    public function test_download_sanitizes_filename_with_control_characters(): void
+    {
+        $service = $this->makeService();
+        $response = $service->download(
+            $this->makeData(),
+            $this->makeColumns(),
+            'csv',
+            "test\x00export"
+        );
+
+        $disposition = $response->headers->get('Content-Disposition');
+        $this->assertStringContainsString('testexport.csv', $disposition);
+    }
+
+    public function test_download_with_empty_filename_falls_back_to_export(): void
+    {
+        $service = $this->makeService();
+        $response = $service->download(
+            $this->makeData(),
+            $this->makeColumns(),
+            'csv',
+            ''
+        );
+
+        $disposition = $response->headers->get('Content-Disposition');
+        $this->assertStringContainsString('export.csv', $disposition);
+    }
+
+    public function test_stream_sanitizes_filename(): void
+    {
+        $service = $this->makeService();
+        $response = $service->stream(
+            $this->makeData(),
+            $this->makeColumns(),
+            'csv',
+            "test\x00\nexport"
+        );
+
+        $this->assertInstanceOf(StreamedResponse::class, $response);
+        $disposition = $response->headers->get('Content-Disposition');
+        $this->assertStringContainsString('testexport.csv', $disposition);
+    }
+
+    public function test_json_encode_failure_in_transform_returns_empty_string(): void
+    {
+        $service = $this->makeService();
+
+        // Invalid UTF-8 string inside an array will cause json_encode to fail
+        $data = collect([
+            ['name' => 'Alice', 'email' => ['nested' => "\xB1\x31"]],
+        ]);
+
+        $columns = [
+            'name' => 'Name',
+            'email' => 'Email',
+        ];
+
+        $csv = $service->export($data, $columns, 'csv', ['include_bom' => false]);
+
+        $this->assertStringContainsString('Alice', $csv);
+        // The failed json_encode should return empty string, not "false"
+        $this->assertStringNotContainsString('false', $csv);
+    }
+
+    public function test_download_models_with_empty_collection(): void
+    {
+        $service = $this->makeService();
+        $response = $service->downloadModels(collect(), 'csv');
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertStringContainsString('text/csv', $response->headers->get('Content-Type'));
+        $this->assertStringContainsString('export.csv', $response->headers->get('Content-Disposition'));
     }
 }

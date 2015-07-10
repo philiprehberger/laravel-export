@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhilipRehberger\Export\Tests;
 
+use Illuminate\Support\Collection;
 use InvalidArgumentException;
 use Orchestra\Testbench\TestCase;
 use PhilipRehberger\Export\Contracts\ExportFormatInterface;
@@ -34,7 +35,7 @@ class ExportFormatRegistryTest extends TestCase
                 private readonly string $contentType,
             ) {}
 
-            public function export(\Illuminate\Support\Collection $data, array $columns, array $options = []): string
+            public function export(Collection $data, array $columns, array $options = []): string
             {
                 return '';
             }
