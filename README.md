@@ -1,5 +1,10 @@
 # laravel-export
 
+[![Tests](https://github.com/philiprehberger/laravel-export/actions/workflows/tests.yml/badge.svg)](https://github.com/philiprehberger/laravel-export/actions/workflows/tests.yml)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/philiprehberger/laravel-export.svg)](https://packagist.org/packages/philiprehberger/laravel-export)
+[![PHP Version Require](https://img.shields.io/packagist/php-v/philiprehberger/laravel-export.svg)](https://packagist.org/packages/philiprehberger/laravel-export)
+[![License](https://img.shields.io/github/license/philiprehberger/laravel-export)](LICENSE)
+
 Registry-based data export system for Laravel with pluggable format support. Ships with CSV and JSON exporters out of the box. Extend with your own formats by implementing a single interface.
 
 ## Requirements
