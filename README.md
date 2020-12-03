@@ -1,6 +1,10 @@
-# laravel-export
+# Laravel Export
 
-Registry-based data export system for Laravel with pluggable format support. Ships with CSV and JSON exporters out of the box. Extend with your own formats by implementing a single interface.
+[![Tests](https://github.com/philiprehberger/laravel-export/actions/workflows/tests.yml/badge.svg)](https://github.com/philiprehberger/laravel-export/actions/workflows/tests.yml)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/philiprehberger/laravel-export.svg)](https://packagist.org/packages/philiprehberger/laravel-export)
+[![License](https://img.shields.io/github/license/philiprehberger/laravel-export)](LICENSE)
+
+Registry-based data export system for Laravel with pluggable format support. Ships with CSV and JSON exporters.
 
 ## Requirements
 
@@ -242,14 +246,39 @@ Export::export($data, $columns, 'csv', [
 ]);
 ```
 
-## Running the Tests
+## API
+
+### `Export` Facade / Service
+
+| Method | Description |
+|--------|-------------|
+| `Export::export(Collection $data, array $columns, string $format, array $options = []): string` | Export data to a string in the given format |
+| `Export::download(Collection $data, array $columns, string $format, string $filename = 'export', array $options = []): Response` | Return a download response |
+| `Export::stream(Collection $data, array $columns, string $format, string $filename = 'export', array $options = []): StreamedResponse` | Return a streamed download response |
+| `Export::exportModels(Collection $models, string $format, array $options = []): string` | Export a collection of `ExportableInterface` models |
+| `Export::downloadModels(Collection $models, string $format, ?string $filename = null, array $options = []): Response` | Download a collection of `ExportableInterface` models |
+| `Export::supportsFormat(string $format): bool` | Check whether a format is registered |
+| `Export::getAvailableFormats(): array` | List all registered format names |
+| `Export::getFormatMetadata(): array` | List format name, extension, and content type for each format |
+
+### `ExportableInterface`
+
+| Method | Description |
+|--------|-------------|
+| `toExportArray(): array` | Return the model as an associative array for export |
+| `getExportColumns(): array` | Return column key → label mapping |
+| `getExportFilename(): string` | Return the default export filename (without extension) |
+
+## Development
 
 ```bash
 composer install
 vendor/bin/phpunit
+vendor/bin/pint --test
+vendor/bin/phpstan analyse
 ```
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+MIT
 
