@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace PhilipRehberger\Export;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 use PhilipRehberger\Export\Contracts\ExportableInterface;
 use PhilipRehberger\Export\Contracts\ExportFormatInterface;
+use PhilipRehberger\Export\Jobs\QueuedExportJob;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -19,9 +21,26 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
  */
 class ExportService
 {
+    /**
+     * The column transformer for the current export chain.
+     */
+    protected ?ColumnTransformer $columnTransformer = null;
+
     public function __construct(
         protected ExportFormatRegistry $registry
     ) {}
+
+    /**
+     * Set a column transformer for selecting, renaming, and computing columns.
+     *
+     * @param  array<string, string|callable>  $columns  Keys are output names, values are source column names or callables
+     */
+    public function columns(array $columns): self
+    {
+        $this->columnTransformer = new ColumnTransformer($columns);
+
+        return $this;
+    }
 
     /**
      * Export a collection of items to the specified format.
@@ -37,7 +56,46 @@ class ExportService
     ): string {
         $exporter = $this->registry->get($format);
 
+        $data = $this->applyColumnTransformer($data);
+
         return $exporter->export($data, $columns, $options);
+    }
+
+    /**
+     * Queue an export for background processing.
+     *
+     * The export result is stored to the specified disk and path via Storage::put().
+     *
+     * @param  Collection<int, mixed>  $data
+     * @param  array<string, string>  $columns
+     */
+    public function queue(
+        Collection $data,
+        array $columns,
+        string $format,
+        string $disk = 'local',
+        ?string $path = null,
+        array $options = [],
+        ?callable $onComplete = null,
+    ): PendingExport {
+        $data = $this->applyColumnTransformer($data);
+
+        $id = Str::uuid()->toString();
+        $exporter = $this->registry->get($format);
+        $extension = $exporter->getFileExtension();
+        $path = $path ?? 'exports/'.$id.'.'.$extension;
+
+        QueuedExportJob::dispatch(
+            $data->values()->all(),
+            $columns,
+            $format,
+            $options,
+            $disk,
+            $path,
+            $onComplete,
+        );
+
+        return new PendingExport($id, $disk, $path);
     }
 
     /**
@@ -193,6 +251,26 @@ class ExportService
     public function getFormatMetadata(): array
     {
         return $this->registry->getFormatMetadata();
+    }
+
+    /**
+     * Apply the column transformer to the data if one is set.
+     *
+     * Resets the transformer after application so it does not leak to subsequent calls.
+     *
+     * @param  Collection<int, mixed>  $data
+     * @return Collection<int, mixed>
+     */
+    private function applyColumnTransformer(Collection $data): Collection
+    {
+        if ($this->columnTransformer === null) {
+            return $data;
+        }
+
+        $transformer = $this->columnTransformer;
+        $this->columnTransformer = null;
+
+        return $data->map(fn ($row) => $transformer->transform((array) $row));
     }
 
     private function sanitizeFilename(string $filename): string

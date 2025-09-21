@@ -7,6 +7,7 @@ namespace PhilipRehberger\Export;
 use Illuminate\Support\ServiceProvider;
 use PhilipRehberger\Export\Formats\CsvExporter;
 use PhilipRehberger\Export\Formats\JsonExporter;
+use PhilipRehberger\Export\Formats\XmlExporter;
 
 class ExportServiceProvider extends ServiceProvider
 {
@@ -26,6 +27,7 @@ class ExportServiceProvider extends ServiceProvider
             // Register built-in formats
             $registry->register(new CsvExporter);
             $registry->register(new JsonExporter);
+            $registry->register(new XmlExporter);
 
             return $registry;
         });

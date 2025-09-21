@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-04-01
+
+### Added
+- XML export format via `XmlExporter` with configurable root and item elements
+- Column transformers via `columns()` for selecting, renaming, and computing derived columns
+- Queued exports via `queue()` for background processing with disk storage
+
 ## [1.1.8] - 2026-03-31
 
 ### Changed
