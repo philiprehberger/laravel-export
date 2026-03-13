@@ -83,6 +83,8 @@ class ExportService
         $exporter = $this->registry->get($format);
         $content = $exporter->export($data, $columns, $options);
 
+        $filename = $this->sanitizeFilename($filename);
+
         // Ensure filename has correct extension
         $extension = $exporter->getFileExtension();
         if (! str_ends_with($filename, '.'.$extension)) {
@@ -108,6 +110,8 @@ class ExportService
         array $options = []
     ): StreamedResponse {
         $exporter = $this->registry->get($format);
+
+        $filename = $this->sanitizeFilename($filename);
 
         // Ensure filename has correct extension
         $extension = $exporter->getFileExtension();
@@ -189,5 +193,12 @@ class ExportService
     public function getFormatMetadata(): array
     {
         return $this->registry->getFormatMetadata();
+    }
+
+    private function sanitizeFilename(string $filename): string
+    {
+        $filename = preg_replace('/[\x00-\x1F\x7F"\\\\\/]/', '', $filename);
+
+        return trim($filename) !== '' ? trim($filename) : 'export';
     }
 }

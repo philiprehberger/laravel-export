@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhilipRehberger\Export\Formats;
 
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use PhilipRehberger\Export\Contracts\ExportFormatInterface;
 
@@ -32,13 +33,14 @@ abstract class AbstractExportFormat implements ExportFormatInterface
                 }
 
                 // Handle Carbon dates
-                if ($value instanceof \Carbon\Carbon) {
+                if ($value instanceof Carbon) {
                     $value = $value->toDateTimeString();
                 }
 
                 // Handle arrays and objects
                 if (is_array($value) || is_object($value)) {
-                    $value = json_encode($value);
+                    $encoded = json_encode($value);
+                    $value = $encoded !== false ? $encoded : '';
                 }
 
                 $transformed[$header] = $value;

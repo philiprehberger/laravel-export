@@ -82,6 +82,8 @@ return Export::stream($data, $columns, 'csv', 'users');
 // Returns a StreamedResponse
 ```
 
+> **Note:** Filenames passed to `download()` and `stream()` are automatically sanitized — control characters, quotes, backslashes, and forward slashes are stripped. Empty filenames fall back to `"export"`.
+
 ## ExportableInterface on Models
 
 Implement `ExportableInterface` on your Eloquent model to let the service derive columns and filename automatically:
@@ -206,8 +208,6 @@ Published at `config/laravel-export.php`:
 
 ```php
 return [
-    'default_format' => 'csv',
-
     'csv' => [
         'delimiter'       => ',',
         'enclosure'       => '"',

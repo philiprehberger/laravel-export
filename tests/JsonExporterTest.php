@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhilipRehberger\Export\Tests;
 
+use Illuminate\Support\Collection;
 use Orchestra\Testbench\TestCase;
 use PhilipRehberger\Export\ExportServiceProvider;
 use PhilipRehberger\Export\Formats\JsonExporter;
@@ -20,7 +21,7 @@ class JsonExporterTest extends TestCase
         return new JsonExporter;
     }
 
-    private function makeData(): \Illuminate\Support\Collection
+    private function makeData(): Collection
     {
         return collect([
             ['name' => 'Alice', 'email' => 'alice@example.com'],
