@@ -247,11 +247,13 @@ Export::export($data, $columns, 'csv', [
 ]);
 ```
 
-## Running the Tests
+## Development
 
 ```bash
 composer install
 vendor/bin/phpunit
+vendor/bin/pint --test
+vendor/bin/phpstan analyse
 ```
 
 ## License
