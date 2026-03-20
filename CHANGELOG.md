@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.5] - 2026-03-20
+
+### Changed
+- Standardize README structure to match template guide
+
 ## [1.1.4] - 2026-03-17
 
 ### Fixed
