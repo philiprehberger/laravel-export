@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.4] - 2026-03-17
+
+### Fixed
+- Add phpstan.neon configuration for CI static analysis
+
+## [1.1.3] - 2026-03-17
+
+### Changed
+- Standardized package metadata, README structure, and CI workflow per package guide
+
+## [1.1.2] - 2026-03-16
+
+### Changed
+- Standardize composer.json: add type, homepage, scripts
+- Add Development section to README
+
+## [1.1.1] - 2026-03-15
+
+### Changed
+- Add README badges
+
 ## [1.1.0] - 2026-03-13
 
 ### Fixed

@@ -1,0 +1,157 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Method PhilipRehberger\\Export\\Contracts\\ExportFormatInterface\:\:export\(\) has parameter \$data with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Contracts/ExportFormatInterface.php
+
+		-
+			message: '#^Method PhilipRehberger\\Export\\Contracts\\ExportFormatInterface\:\:export\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Contracts/ExportFormatInterface.php
+
+		-
+			message: '#^Instanceof between PhilipRehberger\\Export\\Contracts\\ExportableInterface and PhilipRehberger\\Export\\Contracts\\ExportableInterface will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 2
+			path: src/ExportService.php
+
+		-
+			message: '#^Method PhilipRehberger\\Export\\ExportService\:\:download\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ExportService.php
+
+		-
+			message: '#^Method PhilipRehberger\\Export\\ExportService\:\:downloadModels\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ExportService.php
+
+		-
+			message: '#^Method PhilipRehberger\\Export\\ExportService\:\:export\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ExportService.php
+
+		-
+			message: '#^Method PhilipRehberger\\Export\\ExportService\:\:exportModels\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ExportService.php
+
+		-
+			message: '#^Method PhilipRehberger\\Export\\ExportService\:\:getFormatMetadata\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ExportService.php
+
+		-
+			message: '#^Method PhilipRehberger\\Export\\ExportService\:\:stream\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ExportService.php
+
+		-
+			message: '#^Class PhilipRehberger\\Export\\Facades\\Export has PHPDoc tag @method for method download\(\) parameter \#2 \$columns with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Facades/Export.php
+
+		-
+			message: '#^Class PhilipRehberger\\Export\\Facades\\Export has PHPDoc tag @method for method download\(\) parameter \#5 \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Facades/Export.php
+
+		-
+			message: '#^Class PhilipRehberger\\Export\\Facades\\Export has PHPDoc tag @method for method downloadModels\(\) parameter \#4 \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Facades/Export.php
+
+		-
+			message: '#^Class PhilipRehberger\\Export\\Facades\\Export has PHPDoc tag @method for method export\(\) parameter \#2 \$columns with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Facades/Export.php
+
+		-
+			message: '#^Class PhilipRehberger\\Export\\Facades\\Export has PHPDoc tag @method for method export\(\) parameter \#4 \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Facades/Export.php
+
+		-
+			message: '#^Class PhilipRehberger\\Export\\Facades\\Export has PHPDoc tag @method for method exportModels\(\) parameter \#3 \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Facades/Export.php
+
+		-
+			message: '#^Class PhilipRehberger\\Export\\Facades\\Export has PHPDoc tag @method for method getAvailableFormats\(\) return type with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Facades/Export.php
+
+		-
+			message: '#^Class PhilipRehberger\\Export\\Facades\\Export has PHPDoc tag @method for method getFormatMetadata\(\) return type with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Facades/Export.php
+
+		-
+			message: '#^Class PhilipRehberger\\Export\\Facades\\Export has PHPDoc tag @method for method stream\(\) parameter \#2 \$columns with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Facades/Export.php
+
+		-
+			message: '#^Class PhilipRehberger\\Export\\Facades\\Export has PHPDoc tag @method for method stream\(\) parameter \#5 \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Facades/Export.php
+
+		-
+			message: '#^PHPDoc tag @method for method PhilipRehberger\\Export\\Facades\\Export\:\:download\(\) parameter \#1 \$data contains generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Facades/Export.php
+
+		-
+			message: '#^PHPDoc tag @method for method PhilipRehberger\\Export\\Facades\\Export\:\:downloadModels\(\) parameter \#1 \$items contains generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Facades/Export.php
+
+		-
+			message: '#^PHPDoc tag @method for method PhilipRehberger\\Export\\Facades\\Export\:\:export\(\) parameter \#1 \$data contains generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Facades/Export.php
+
+		-
+			message: '#^PHPDoc tag @method for method PhilipRehberger\\Export\\Facades\\Export\:\:exportModels\(\) parameter \#1 \$items contains generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Facades/Export.php
+
+		-
+			message: '#^PHPDoc tag @method for method PhilipRehberger\\Export\\Facades\\Export\:\:stream\(\) parameter \#1 \$data contains generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Facades/Export.php
+
+		-
+			message: '#^Method PhilipRehberger\\Export\\Formats\\CsvExporter\:\:export\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Formats/CsvExporter.php
+
+		-
+			message: '#^Method PhilipRehberger\\Export\\Formats\\JsonExporter\:\:export\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Formats/JsonExporter.php

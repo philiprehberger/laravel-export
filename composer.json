@@ -2,11 +2,14 @@
     "name": "philiprehberger/laravel-export",
     "description": "Registry-based data export system for Laravel with pluggable format support. Ships with CSV and JSON exporters",
     "keywords": ["laravel", "export", "csv", "json", "download", "data"],
+    "type": "library",
     "license": "MIT",
+    "homepage": "https://github.com/philiprehberger/laravel-export",
     "authors": [
         {
             "name": "Philip Rehberger",
-            "email": "me@philiprehberger.com"
+            "email": "me@philiprehberger.com",
+            "role": "Developer"
         }
     ],
     "require": {
@@ -14,9 +17,11 @@
         "illuminate/support": "^11.0|^12.0"
     },
     "require-dev": {
+        "larastan/larastan": "^2.0|^3.0",
+        "laravel/pint": "^1.0",
         "orchestra/testbench": "^9.0|^10.0",
-        "phpunit/phpunit": "^11.0",
-        "laravel/pint": "^1.0"
+        "phpstan/extension-installer": "^1.4",
+        "phpunit/phpunit": "^11.0"
     },
     "autoload": {
         "psr-4": {
@@ -35,9 +40,17 @@
             ]
         }
     },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "lint": "vendor/bin/pint",
+        "analyse": "vendor/bin/phpstan analyse"
+    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
     }
 }
