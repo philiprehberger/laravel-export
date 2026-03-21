@@ -25,7 +25,7 @@ Optionally publish the config file:
 php artisan vendor:publish --tag=laravel-export-config
 ```
 
-## Basic Usage
+## Usage
 
 ### Export a Collection to CSV
 
@@ -88,7 +88,7 @@ return Export::stream($data, $columns, 'csv', 'users');
 
 > **Note:** Filenames passed to `download()` and `stream()` are automatically sanitized — control characters, quotes, backslashes, and forward slashes are stripped. Empty filenames fall back to `"export"`.
 
-## ExportableInterface on Models
+### ExportableInterface on Models
 
 Implement `ExportableInterface` on your Eloquent model to let the service derive columns and filename automatically:
 
@@ -139,7 +139,7 @@ return Export::downloadModels($users, 'csv');
 return Export::downloadModels($users, 'csv', 'active-users');
 ```
 
-### Automatic Value Transformations
+#### Automatic Value Transformations
 
 `AbstractExportFormat` handles these transformations automatically inside `toExportArray` or when using raw collections:
 
@@ -149,7 +149,7 @@ return Export::downloadModels($users, 'csv', 'active-users');
 | `Carbon\Carbon` | `->toDateTimeString()` (Y-m-d H:i:s) |
 | `array` / `object` | `json_encode()` |
 
-## Creating a Custom Format Exporter
+### Creating a Custom Format Exporter
 
 Implement `ExportFormatInterface` (or extend the provided `AbstractExportFormat` base class):
 
@@ -197,7 +197,7 @@ Then use it exactly like the built-in formats:
 Export::download($data, $columns, 'xml', 'report');
 ```
 
-## Checking Available Formats
+### Checking Available Formats
 
 ```php
 Export::supportsFormat('csv');       // true
@@ -206,7 +206,7 @@ Export::getAvailableFormats();       // ['csv', 'json']
 Export::getFormatMetadata();         // [['name'=>'csv', 'extension'=>'csv', 'contentType'=>'text/csv; charset=UTF-8'], ...]
 ```
 
-## Configuration Reference
+### Configuration Reference
 
 Published at `config/laravel-export.php`:
 
@@ -226,7 +226,7 @@ return [
 ];
 ```
 
-### Option Reference
+#### Option Reference
 
 | Option | Format | Default | Description |
 |--------|--------|---------|-------------|
