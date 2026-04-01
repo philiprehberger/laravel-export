@@ -4,7 +4,7 @@
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/philiprehberger/laravel-export.svg)](https://packagist.org/packages/philiprehberger/laravel-export)
 [![Last updated](https://img.shields.io/github/last-commit/philiprehberger/laravel-export)](https://github.com/philiprehberger/laravel-export/commits/main)
 
-Registry-based data export system for Laravel with pluggable format support. Ships with CSV and JSON exporters.
+Registry-based data export system for Laravel with pluggable format support. Ships with CSV, JSON, and XML exporters, plus column transformers and queued exports.
 
 ## Requirements
 
@@ -53,6 +53,18 @@ $csvString = Export::export($data, $columns, 'csv');
 $jsonString = Export::export($data, $columns, 'json');
 ```
 
+### Export a Collection to XML
+
+```php
+$xmlString = Export::export($data, $columns, 'xml');
+
+// With custom element names
+$xmlString = Export::export($data, $columns, 'xml', [
+    'root_element' => 'users',
+    'item_element' => 'user',
+]);
+```
+
 ### Download Response (CSV)
 
 Return a download response directly from a controller:
@@ -87,6 +99,61 @@ return Export::stream($data, $columns, 'csv', 'users');
 ```
 
 > **Note:** Filenames passed to `download()` and `stream()` are automatically sanitized — control characters, quotes, backslashes, and forward slashes are stripped. Empty filenames fall back to `"export"`.
+
+### Column Transformers
+
+Use `columns()` to select, rename, or compute derived columns before exporting. Keys are output column names; values are either a source column name (string) or a callable that receives the full row:
+
+```php
+$data = collect([
+    ['first_name' => 'Alice', 'last_name' => 'Smith', 'email' => 'alice@example.com'],
+    ['first_name' => 'Bob',   'last_name' => 'Jones', 'email' => 'bob@example.com'],
+]);
+
+$columns = [
+    'Full Name' => 'Full Name',
+    'Email'     => 'Email',
+];
+
+$csv = Export::columns([
+    'Full Name' => fn (array $row) => $row['first_name'] . ' ' . $row['last_name'],
+    'Email'     => 'email',
+])->export($data, $columns, 'csv');
+```
+
+The transformer is applied once and automatically resets after the export call.
+
+### Queued Exports
+
+For large datasets, dispatch the export to a background queue. The result is stored to a Laravel filesystem disk:
+
+```php
+use PhilipRehberger\Export\PendingExport;
+
+$pending = Export::queue($data, $columns, 'csv');
+// Returns a PendingExport value object
+
+$pending->id;      // Unique export identifier
+$pending->disk;    // Storage disk (default: 'local')
+$pending->path;    // File path on disk (auto-generated or custom)
+$pending->status(); // 'pending' or 'completed'
+```
+
+Customize the disk, path, and options:
+
+```php
+$pending = Export::queue($data, $columns, 'json', 's3', 'reports/monthly.json', [
+    'pretty_print' => false,
+]);
+```
+
+Provide an optional callback that runs after the export completes:
+
+```php
+$pending = Export::queue($data, $columns, 'csv', 'local', null, [], function (string $path, string $disk) {
+    // Notify user, send email, etc.
+});
+```
 
 ### ExportableInterface on Models
 
@@ -202,7 +269,7 @@ Export::download($data, $columns, 'xml', 'report');
 ```php
 Export::supportsFormat('csv');       // true
 Export::supportsFormat('excel');     // false (not registered)
-Export::getAvailableFormats();       // ['csv', 'json']
+Export::getAvailableFormats();       // ['csv', 'json', 'xml']
 Export::getFormatMetadata();         // [['name'=>'csv', 'extension'=>'csv', 'contentType'=>'text/csv; charset=UTF-8'], ...]
 ```
 
@@ -223,6 +290,11 @@ return [
         'pretty_print'      => true,
         'include_metadata'  => false, // wraps output in {metadata:{}, data:[]}
     ],
+
+    'xml' => [
+        'root_element' => 'items',
+        'item_element' => 'item',
+    ],
 ];
 ```
 
@@ -236,6 +308,8 @@ return [
 | `include_headers` | CSV | `true` | Write column headers as the first row |
 | `pretty_print` | JSON | `true` | Human-readable indented output |
 | `include_metadata` | JSON | `false` | Wrap array in `{metadata, data}` envelope |
+| `root_element` | XML | `items` | Root element name wrapping all items |
+| `item_element` | XML | `item` | Element name for each row |
 
 Options can be passed per-call to override the config defaults:
 
@@ -257,6 +331,8 @@ Export::export($data, $columns, 'csv', [
 | `Export::stream(Collection $data, array $columns, string $format, string $filename = 'export', array $options = []): StreamedResponse` | Return a streamed download response |
 | `Export::exportModels(Collection $models, string $format, array $options = []): string` | Export a collection of `ExportableInterface` models |
 | `Export::downloadModels(Collection $models, string $format, ?string $filename = null, array $options = []): Response` | Download a collection of `ExportableInterface` models |
+| `Export::columns(array $columns): ExportService` | Set a column transformer for the next export call |
+| `Export::queue(Collection $data, array $columns, string $format, string $disk = 'local', ?string $path = null, array $options = [], ?callable $onComplete = null): PendingExport` | Queue an export for background processing |
 | `Export::supportsFormat(string $format): bool` | Check whether a format is registered |
 | `Export::getAvailableFormats(): array` | List all registered format names |
 | `Export::getFormatMetadata(): array` | List format name, extension, and content type for each format |

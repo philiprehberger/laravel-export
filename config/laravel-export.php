@@ -32,4 +32,17 @@ return [
         'include_metadata' => false,
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | XML Options
+    |--------------------------------------------------------------------------
+    |
+    | Configuration options for the XML exporter.
+    |
+    */
+    'xml' => [
+        'root_element' => 'items',
+        'item_element' => 'item',
+    ],
+
 ];
